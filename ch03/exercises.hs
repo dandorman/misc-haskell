@@ -91,6 +91,18 @@ grahamScan xs =
           turns             = dirs (lowest:next:others)
           rightTurn         = elemIndex R turns
 
+grahamScan2 :: [Point] -> [Point]
+grahamScan2 xs = foldl checkTurn [next, lowest] others
+                 where byLowest               = sortOn snd xs
+                       lowest                 = head byLowest
+                       angleFromLowest p      = toAngle (sub p lowest)
+                       byAngle                = sortOn angleFromLowest (tail byLowest)
+                       next                   = head byAngle
+                       others                 = tail byAngle
+                       checkTurn l@(y:z:xs) x = case (dir x y z) of
+                                                    L -> x:z:xs
+                                                    _ -> x:l
+
 -- . . 5 . | . 3 . .
 -- . . . . | . . . .
 -- . . . . | . . . .
